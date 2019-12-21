@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 // Components
 import Lights from '../GL/Lights';
+import Controls from '../GL/Controls';
 
 
 const CanvasWrapper = styled.div`
@@ -19,6 +20,7 @@ const Scene = ({ children }) => (
       // orthographic={true}
     >
       <Lights />
+      <Controls />
       {children}
     </Canvas>
   </CanvasWrapper>
