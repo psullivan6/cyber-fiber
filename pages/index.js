@@ -1,31 +1,66 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
+import styled from 'styled-components';
 
 // Components
 import Head from 'next/head'
 import Nav from '../components/nav'
 import Scene from '../components/Scene';
 import Model from '../components/Model';
-import styled from 'styled-components';
+import Debugger from '../components/Debugger';
 
-const Headline = styled.h1`
-  color: rebeccapurple;
+import Test from '../components/Test';
+
+// Context
+import { SceneDataContext } from '../components/Scene/context';
+
+const Legend = styled.h1`
+  .axisX {
+    color: red;
+  }
+  .axisY {
+    color: green;
+  }
+  .axisZ {
+    color: blue;
+  }
 `;
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const Home = () => {
+  const [lightColor, setLightColor] = useState(null);
 
-    <Nav />
+  const handleUpdate = ({ color }) => {
+    console.log('color', color);
+    setLightColor(color);
+  };
 
-    <Headline>STUFF HERE</Headline>
+  // console.log('lightColor', lightColor);
 
-    <Scene>
-      <Model />
-    </Scene>
-  </div>
-);
+  return (
+    <div>
+      <Head>
+        <title>Home</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <Nav />
+
+      <Legend>
+        <span className="axisX">X Axis</span>
+        <span className="axisY">Y Axis</span>
+        <span className="axisZ">Z Axis</span>
+      </Legend>
+
+      <Debugger onUpdate={handleUpdate} />
+
+      {/* <SceneDataContext.Provider value={{ lightColor }}> */}
+        <Test />
+      {/* </SceneDataContext.Provider> */}
+
+      <Scene>
+        <Model />
+      </Scene>
+    </div>
+  );
+}
 
 export default Home;
