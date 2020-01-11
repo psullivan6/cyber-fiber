@@ -6,8 +6,24 @@ import { useResource } from 'react-three-fiber';
 import { useControl } from 'react-three-gui';
 import { a } from 'react-spring/three';
 
+const Toggle = ({ control, value }) => (
+  <>
+    <label>{control.name}</label>
+    <input
+      type="checkbox"
+      onChange={e => {
+        const bool = e.currentTarget.checked;
+        control.set(bool);
+        control.config.onChange(bool);
+      }}
+      checked={value}
+    />
+  </>
+);
+
 const SpotLight = ({ id, group, onRemove }) => {
   const [ref, light] = useResource();
+  const [showHelper, setShowHelper] = useState(true);
 
   const color = useControl('Light Color', {
     type: 'color',
@@ -21,11 +37,41 @@ const SpotLight = ({ id, group, onRemove }) => {
     max: 100,
     group
   });
+  const positionX = useControl('position X', {
+    type: 'number',
+    min: -10,
+    max: 10,
+    value: 0,
+    group
+  });
+  const positionObject = useControl('Position XY', {
+    type: 'xypad',
+    distance: Math.PI,
+    scrub: true,
+    group
+  });
+
+  // [TODO] Ensure the `react-three-gui` library sends the onChange handler for the boolean type,
+  // had to make a custom type to use the onChange handler
+  useControl('Show Helper', {
+    type: 'custom',
+    value: showHelper,
+    component: Toggle,
+    onChange: value => {
+      setShowHelper(value);
+    },
+    group
+  });
+
   useControl('Remove', {
     type: 'button',
     onClick: onRemove,
     group
   });
+
+  const handleUpdate = self => {
+    self.lookAt(0, 0, 0);
+  };
 
   return (
     <group>
@@ -33,13 +79,14 @@ const SpotLight = ({ id, group, onRemove }) => {
         ref={ref}
         intensity={intensity}
         angle={Math.PI / 30}
-        position={[8, 8, 5]}
+        position={[positionObject.x, positionObject.y, 5]}
         penumbra={0.9}
         color={color}
         distance={15}
         decay={2}
+        onUpdate={handleUpdate}
       />
-      {light && <spotLightHelper args={[light, 0xff00ff]} />}
+      {light && showHelper && <spotLightHelper args={[light, 0xff00ff]} />}
     </group>
   );
 };
