@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useResource } from 'react-three-fiber';
 
 function Lights() {
-  const [ref, light] = useResource()
+  const [ref, light] = useResource();
 
   return (
     <group>
@@ -20,7 +20,7 @@ function Lights() {
       />
       {light && <spotLightHelper args={[light, 0xff00ff]} />}
     </group>
-  )
+  );
 }
 
 export default Lights;
